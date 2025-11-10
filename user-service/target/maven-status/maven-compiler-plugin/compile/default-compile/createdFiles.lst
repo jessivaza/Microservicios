@@ -1,0 +1,5 @@
+com\gestordocs\userservice\model\Usuario.class
+com\gestordocs\userservice\repository\RepositorioUsuario.class
+com\gestordocs\userservice\controller\ControladorUsuario.class
+com\gestordocs\userservice\config\WebSecurityConfig.class
+com\gestordocs\userservice\UserServiceApplication.class
