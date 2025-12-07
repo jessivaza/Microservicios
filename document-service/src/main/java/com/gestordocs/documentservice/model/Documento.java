@@ -1,4 +1,4 @@
-package main.java.com.gestordocs.documentservice.model;
+package com.gestordocs.documentservice.model;
 
 import com.gestordocs.documentservice.model.enums.EstadoDocumento;
 import com.gestordocs.documentservice.model.enums.EstadoEntrega;

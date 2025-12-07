@@ -1,4 +1,4 @@
-package main.java.com.gestordocs.documentservice;
+package com.gestordocs.documentservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,18 +1,23 @@
 // src/main/java/com/gestordocs/documentservice/controller/ControladorDocumento.java
 
-package main.java.com.gestordocs.documentservice.controller;
-
-import com.gestordocs.documentservice.model.Documento;
-import com.gestordocs.documentservice.model.ArchivoAsociado;
-import com.gestordocs.documentservice.model.enums.EstadoDocumento;
-import com.gestordocs.documentservice.repository.RepositorioDocumento;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+package com.gestordocs.documentservice.controller;
 
 import java.time.Instant;
-import java.util.Collections;
-import java.util.UUID;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.gestordocs.documentservice.model.ArchivoAsociado;
+import com.gestordocs.documentservice.model.Documento;
+import com.gestordocs.documentservice.model.enums.EstadoDocumento;
+import com.gestordocs.documentservice.repository.RepositorioDocumento;
 
 @RestController
 @RequestMapping("/api/documentos")
@@ -78,22 +83,22 @@ public class ControladorDocumento {
      * Actualiza el estado del flujo de trabajo (solo un ejemplo).
      * @param nuevoEstadoString El nuevo estado como string (ej: "PENDIENTE_FACTURACION").
      */
-    @PutMapping("/estado/{id}")
-    public ResponseEntity<Documento> actualizarEstado(@PathVariable Long id, @RequestBody String nuevoEstadoString) {
-        return repositorioDocumento.findById(id)
-            .map(documento -> {
-                try {
-                    EstadoDocumento nuevoEstado = EstadoDocumento.valueOf(nuevoEstadoString.toUpperCase());
-                    documento.setEstado(nuevoEstado);
-                    Documento actualizado = repositorioDocumento.save(documento);
-                    
-                    // [NOTA]: Aquí se llamaría al Audit Service para registrar el cambio de estado.
-                    
-                    return ResponseEntity.ok(actualizado);
-                } catch (IllegalArgumentException e) {
-                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 400 Si el estado no existe
-                }
-            })
-            .orElseGet(() -> ResponseEntity.notFound().build()); // 404
-    }
+@PutMapping("/estado/{id}")
+public ResponseEntity<?> actualizarEstado(@PathVariable Long id, @RequestBody String nuevoEstadoString) {
+    return repositorioDocumento.findById(id)
+        .map(documento -> {
+            try {
+                EstadoDocumento nuevoEstado = EstadoDocumento.valueOf(nuevoEstadoString.toUpperCase());
+                documento.setEstado(nuevoEstado);
+                Documento actualizado = repositorioDocumento.save(documento);
+
+                // 200 OK con el documento actualizado
+                return ResponseEntity.ok(actualizado);
+            } catch (IllegalArgumentException e) {
+                // 400 Si el estado no existe
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Estado no válido: " + nuevoEstadoString);
+            }
+        })
+        .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Documento no encontrado")); // 404
+}
 }

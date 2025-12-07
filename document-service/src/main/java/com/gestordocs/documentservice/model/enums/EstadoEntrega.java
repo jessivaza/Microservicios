@@ -1,4 +1,4 @@
-package main.java.com.gestordocs.documentservice.model.enums;
+package com.gestordocs.documentservice.model.enums;
 
 public enum EstadoEntrega {
     EN_ESPERA("En Espera"),

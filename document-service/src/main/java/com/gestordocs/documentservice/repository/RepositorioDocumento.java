@@ -1,6 +1,6 @@
 // src/main/java/com/gestordocs/documentservice/repository/RepositorioDocumento.java
 
-package main.java.com.gestordocs.documentservice.repository;
+package com.gestordocs.documentservice.repository;
 
 import com.gestordocs.documentservice.model.Documento;
 import org.springframework.data.jpa.repository.JpaRepository;
