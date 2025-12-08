@@ -44,10 +44,10 @@ public class ControladorAutenticacion {
 
         try {
             // 1️⃣ Llamar al User Service para obtener usuario por email
-            String url = userServiceBaseUrl + "/email/{email}";
+            String url = userServiceBaseUrl + "/by-email?email={email}";
 
-            ResponseEntity<UsuarioRespuesta> respuesta =
-                    restTemplate.getForEntity(url, UsuarioRespuesta.class, credenciales.getEmail());
+            ResponseEntity<UsuarioRespuesta> respuesta = restTemplate.getForEntity(url, UsuarioRespuesta.class,
+                    credenciales.getEmail());
 
             if (!respuesta.getStatusCode().is2xxSuccessful() || respuesta.getBody() == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -62,8 +62,8 @@ public class ControladorAutenticacion {
             }
 
             // 2️⃣ Verificar la contraseña con BCrypt
-            boolean contrasenaValida =
-                    codificadorContrasena.matches(credenciales.getPassword(), usuarioDb.getPasswordHash());
+            boolean contrasenaValida = codificadorContrasena.matches(credenciales.getPassword(),
+                    usuarioDb.getPasswordHash());
 
             if (!contrasenaValida) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -75,8 +75,8 @@ public class ControladorAutenticacion {
             try {
                 String permisosUrl = rbacServiceBaseUrl + "/roles/{rolId}/permisos";
 
-                ResponseEntity<List> respuestaPermisos =
-                        restTemplate.getForEntity(permisosUrl, List.class, usuarioDb.getRolId());
+                ResponseEntity<List> respuestaPermisos = restTemplate.getForEntity(permisosUrl, List.class,
+                        usuarioDb.getRolId());
 
                 if (respuestaPermisos.getStatusCode().is2xxSuccessful()
                         && respuestaPermisos.getBody() != null) {
@@ -99,8 +99,7 @@ public class ControladorAutenticacion {
                     "apellidos", usuarioDb.getApellidos(),
                     "email", usuarioDb.getEmail(),
                     "rolId", usuarioDb.getRolId(),
-                    "permisos", permisos
-            ));
+                    "permisos", permisos));
 
         } catch (HttpClientErrorException.NotFound e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
